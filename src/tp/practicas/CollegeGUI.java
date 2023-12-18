@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.UIManager.*;
+import tp.practicas.cosasDePablo.*;
+import tp.practicas.CollegeManagement.*;
+
+
 public class CollegeGUI extends JFrame {
     static private OfferedCourses offeredCourses= new OfferedCourses();
     static private EnrolledStudents enrolledStudents = new EnrolledStudents();;
