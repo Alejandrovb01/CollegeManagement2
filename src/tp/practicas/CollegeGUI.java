@@ -43,11 +43,13 @@ public class CollegeGUI extends JFrame {
         orderName = new JRadioButton("Order by student's name", true);
         orderName.addActionListener(e -> {
             selectedRadioButton = false;
+            updateTextArea();
             System.out.println("ORDER ME BY NAME");
         });
         orderId = new JRadioButton("Order by student's id", false);
         orderId.addActionListener(e -> {
             selectedRadioButton = true;
+            updateTextArea();
             System.out.println("ORDER ME BY ID");
         });
         ButtonGroup bg = new ButtonGroup();
@@ -100,49 +102,12 @@ public class CollegeGUI extends JFrame {
         } else {
             students = enrolledStudents.getStudentsOrderByName();
         }
-
         StringBuilder sb = new StringBuilder();
         for (Student student : students) {
             sb.append(student.toString());
+            sb.append("\n");
         }
         data.setText(sb.toString());
-    }
-
-    private void mostrarDialogo() {
-        JTextField textFieldName = new JTextField(20);
-        JTextField textFieldID = new JTextField(20);
-
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        panel.add(new JLabel("Name:"), gbc);
-
-        gbc.gridx = 1;
-        panel.add(textFieldName, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(new JLabel("ID:"), gbc);
-
-        gbc.gridx = 1;
-        panel.add(textFieldID, gbc);
-
-        int opcion = JOptionPane.showConfirmDialog(this, panel, "Add new student", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (opcion == JOptionPane.OK_OPTION) {
-            try {
-                // Intenta convertir el texto a un entero
-                int id = Integer.parseInt(textFieldID.getText());
-                String name = textFieldName.getText();
-                enrolledStudents.addStudent(new Student(id, name));
-                updateTextArea();
-            } catch (NumberFormatException e) {
-                // Maneja la excepción si el texto no es un entero válido
-                JOptionPane.showMessageDialog(this, "Please enter a valid ID (numeric).", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
     }
 
     private void addStudentWindow() {
@@ -167,11 +132,18 @@ public class CollegeGUI extends JFrame {
         panel.add(textFieldID, gbc);
 
         int option = JOptionPane.showConfirmDialog(this, panel, "Add new student", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        
+
         if (option == JOptionPane.OK_OPTION) {
-            enrolledStudents.addStudent(new Student(Integer.parseInt(textFieldID.getText()), textFieldName.getText()));
-            System.out.println(new Student(Integer.parseInt(textFieldID.getText()), textFieldName.getText()).toString());
-            updateTextArea();
+            try {
+                int id = Integer.parseInt(textFieldID.getText());
+                String name = textFieldName.getText();
+                if(!enrolledStudents.addStudent(new Student(id, name))) {
+                    JOptionPane.showMessageDialog(this, "A student already has that ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                updateTextArea();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid ID (numeric).", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -220,6 +192,7 @@ public class CollegeGUI extends JFrame {
             System.out.println(selectedCourse.toString());
             System.out.println(selectedStudent.toString());
             System.out.println(selectedStudent.enrollCourse(selectedCourse));
+            updateTextArea();
         }
     }
 
