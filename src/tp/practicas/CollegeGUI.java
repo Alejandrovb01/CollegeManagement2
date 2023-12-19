@@ -44,13 +44,11 @@ public class CollegeGUI extends JFrame {
         orderName.addActionListener(e -> {
             selectedRadioButton = false;
             updateTextArea();
-            System.out.println("ORDER ME BY NAME");
         });
         orderId = new JRadioButton("Order by student's id", false);
         orderId.addActionListener(e -> {
             selectedRadioButton = true;
             updateTextArea();
-            System.out.println("ORDER ME BY ID");
         });
         ButtonGroup bg = new ButtonGroup();
         bg.add(orderName);
@@ -189,9 +187,10 @@ public class CollegeGUI extends JFrame {
             if(matcherCourse.find()) {selectedCourse = offeredCourses.getCourse(Integer.parseInt(matcherCourse.group(1)));}
             if(matcherStudent.find()) {selectedStudent = enrolledStudents.getStudent(Integer.parseInt(matcherStudent.group(1)));}
 
-            System.out.println(selectedCourse.toString());
-            System.out.println(selectedStudent.toString());
-            System.out.println(selectedStudent.enrollCourse(selectedCourse));
+            assert selectedStudent != null;
+            if (!selectedStudent.enrollCourse(selectedCourse)) {
+                JOptionPane.showMessageDialog(this, "Student already in course.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
             updateTextArea();
         }
     }
