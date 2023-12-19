@@ -89,6 +89,60 @@ public class CollegeGUI extends JFrame {
         setSize(700,200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+
+        updateTextArea();
+    }
+
+    private void updateTextArea() {
+        List<Student> students;
+        if (selectedRadioButton) {
+            students = enrolledStudents.getStudentsOrderById();
+        } else {
+            students = enrolledStudents.getStudentsOrderByName();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (Student student : students) {
+            sb.append(student.toString());
+        }
+        data.setText(sb.toString());
+    }
+
+    private void mostrarDialogo() {
+        JTextField textFieldName = new JTextField(20);
+        JTextField textFieldID = new JTextField(20);
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        panel.add(new JLabel("Name:"), gbc);
+
+        gbc.gridx = 1;
+        panel.add(textFieldName, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(new JLabel("ID:"), gbc);
+
+        gbc.gridx = 1;
+        panel.add(textFieldID, gbc);
+
+        int opcion = JOptionPane.showConfirmDialog(this, panel, "Add new student", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (opcion == JOptionPane.OK_OPTION) {
+            try {
+                // Intenta convertir el texto a un entero
+                int id = Integer.parseInt(textFieldID.getText());
+                String name = textFieldName.getText();
+                enrolledStudents.addStudent(new Student(id, name));
+                updateTextArea();
+            } catch (NumberFormatException e) {
+                // Maneja la excepción si el texto no es un entero válido
+                JOptionPane.showMessageDialog(this, "Please enter a valid ID (numeric).", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private void addStudentWindow() {
@@ -117,6 +171,7 @@ public class CollegeGUI extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             enrolledStudents.addStudent(new Student(Integer.parseInt(textFieldID.getText()), textFieldName.getText()));
             System.out.println(new Student(Integer.parseInt(textFieldID.getText()), textFieldName.getText()).toString());
+            updateTextArea();
         }
     }
 
