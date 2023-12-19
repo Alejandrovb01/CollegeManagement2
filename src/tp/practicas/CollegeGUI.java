@@ -1,6 +1,10 @@
 package tp.practicas;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.*;
+
 import tp.practicas.CollegeManagement.*;
 
 
@@ -111,16 +115,25 @@ public class CollegeGUI extends JFrame {
         int option = JOptionPane.showConfirmDialog(this, panel, "Add new student", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         
         if (option == JOptionPane.OK_OPTION) {
-            System.out.println(textFieldID.getText() + ": " + textFieldName.getText());
+            enrolledStudents.addStudent(new Student(Integer.parseInt(textFieldID.getText()), textFieldName.getText()));
+            System.out.println(new Student(Integer.parseInt(textFieldID.getText()), textFieldName.getText()).toString());
         }
     }
 
     private void enrollStudentWindow() {
-        String[] optionsStudents = {"Pablo", "Alejandro", "Joel", "Augusto"};
-        String[] optionsCourses = {"Math", "Science", "Literature", "Philosophy", "History"};
+        List<Student> students = enrolledStudents.getStudentsOrderById();
+        String[] studentNames = new String[students.size()];
+        for(int i=0; i< students.size(); i++) {
+            studentNames[i] = students.get(i).getId() + "-" + students.get(i).getName();
+        }
+        List<Course> courses = offeredCourses.getCourses();
+        String[] coursesNames = new String[courses.size()];
+        for(int i=0; i< courses.size(); i++) {
+            coursesNames[i] = courses.get(i).toString();
+        }
 
-        JComboBox<String> comboStudents = new JComboBox<>(optionsStudents);
-        JComboBox<String> comboCourses = new JComboBox<>(optionsCourses);
+        JComboBox<String> comboStudents = new JComboBox<>(studentNames);
+        JComboBox<String> comboCourses = new JComboBox<>(coursesNames);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -140,7 +153,18 @@ public class CollegeGUI extends JFrame {
 
         int option = JOptionPane.showConfirmDialog(this, panel, "Enroll student in course", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (option == JOptionPane.OK_OPTION) {
-            System.out.println((String) comboStudents.getSelectedItem() + ": " + (String) comboCourses.getSelectedItem());
+            Course selectedCourse = null;
+            Student selectedStudent = null;
+            Pattern patternCourse = Pattern.compile("\\((\\d+)\\)");
+            Pattern patternStudent = Pattern.compile("(\\d+)-.*");
+            Matcher matcherCourse = patternCourse.matcher((CharSequence) Objects.requireNonNull(comboCourses.getSelectedItem()));
+            Matcher matcherStudent = patternStudent.matcher((CharSequence) Objects.requireNonNull(comboStudents.getSelectedItem()));
+            if(matcherCourse.find()) {selectedCourse = offeredCourses.getCourse(Integer.parseInt(matcherCourse.group(1)));}
+            if(matcherStudent.find()) {selectedStudent = enrolledStudents.getStudent(Integer.parseInt(matcherStudent.group(1)));}
+
+            System.out.println(selectedCourse.toString());
+            System.out.println(selectedStudent.toString());
+            System.out.println(selectedStudent.enrollCourse(selectedCourse));
         }
     }
 
@@ -149,5 +173,6 @@ public class CollegeGUI extends JFrame {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         }catch(Exception ignored) {}
         new CollegeGUI();
+
     }
 }
