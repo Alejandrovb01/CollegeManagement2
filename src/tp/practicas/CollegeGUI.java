@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.UIManager.*;
-import tp.practicas.cosasDePablo.*;
+//Salvo por la línea 8, que importa el trabajo anterior, el resto es el código base
 import tp.practicas.CollegeManagement.*;
 
 

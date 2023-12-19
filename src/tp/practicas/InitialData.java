@@ -1,5 +1,4 @@
 package tp.practicas;
-import tp.practicas.CollegeManagement.*;
 public class InitialData {
     static void init(OfferedCourses offeredCourses, EnrolledStudents enrolledStudents) {
         offeredCourses.addCourse( new Course(100, "Mathematic") );

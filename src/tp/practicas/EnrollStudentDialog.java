@@ -1,5 +1,4 @@
 package tp.practicas;
-import tp.practicas.CollegeManagement.*;
 
 /**
  * AVISO: Esta clase puede servir de base para el correspondiente diálogo, pero
@@ -8,7 +7,7 @@ import tp.practicas.CollegeManagement.*;
 
 import javax.swing.*;
 
-class EnrolledStudentDialog extends JDialog {
+class EnrollStudentDialog extends JDialog {
     public boolean isAccepted() {
         return false;
     }

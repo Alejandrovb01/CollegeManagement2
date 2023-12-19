@@ -1,5 +1,4 @@
 package tp.practicas;
-import tp.practicas.CollegeManagement.*;
 
 /**
  * AVISO: Esta clase puede servir de base para el correspondiente diálogo, pero
@@ -8,14 +7,14 @@ import tp.practicas.CollegeManagement.*;
 
 import javax.swing.*;
 import java.awt.*;
-class AddStudentDialog extends JDialog {
+class AddStudentDialog extends JDialog{
     public boolean isAccepted() {
-        return false;
+        return true;
     }
-    public Student getStudent() {
-        return null;
+    public String getId() {
+        return "";
     }
-    public Course getCourse() {
-        return null;
+    public String getName() {
+        return "";
     }
 }
