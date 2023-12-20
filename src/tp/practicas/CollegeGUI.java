@@ -1,16 +1,14 @@
 package tp.practicas;
+import tp.practicas.CollegeManagement.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.*;
 
-import tp.practicas.CollegeManagement.*;
-
-
 public class CollegeGUI extends JFrame {
     static private OfferedCourses offeredCourses= new OfferedCourses();
-    static private EnrolledStudents enrolledStudents = new EnrolledStudents();;
+    static private EnrolledStudents enrolledStudents = new EnrolledStudents();
 
     private JTextArea data;
     private JRadioButton orderName;
@@ -109,40 +107,55 @@ public class CollegeGUI extends JFrame {
     }
 
     private void addStudentWindow() {
-        JTextField textFieldName = new JTextField(20); 
-        JTextField textFieldID = new JTextField(20); 
-        
+        JTextField textFieldName = new JTextField(20);
+        JTextField textFieldID = new JTextField(20);
+
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 5, 5, 5);
-        panel.add(new JLabel("Name:"), gbc);
-
-        gbc.gridx = 1;
-        panel.add(textFieldName, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
         panel.add(new JLabel("ID:"), gbc);
 
         gbc.gridx = 1;
         panel.add(textFieldID, gbc);
 
-        int option = JOptionPane.showConfirmDialog(this, panel, "Add new student", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(new JLabel("Name:"), gbc);
 
-        if (option == JOptionPane.OK_OPTION) {
-            try {
-                int id = Integer.parseInt(textFieldID.getText());
-                String name = textFieldName.getText();
-                if(!enrolledStudents.addStudent(new Student(id, name))) {
-                    JOptionPane.showMessageDialog(this, "A student already has that ID.", "Error", JOptionPane.ERROR_MESSAGE);
+        gbc.gridx = 1;
+        panel.add(textFieldName, gbc);
+
+        boolean validInput = false;
+        while (!validInput) {
+            int option = JOptionPane.showConfirmDialog(this, panel, "Add new student", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (option == JOptionPane.OK_OPTION) {
+                try {
+                    int id = Integer.parseInt(textFieldID.getText());
+                    String name = textFieldName.getText();
+
+                    if (name.equals("")) {
+                        JOptionPane.showMessageDialog(this, "A student must have a name.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if (!enrolledStudents.addStudent(new Student(id, name))) {
+                        JOptionPane.showMessageDialog(this, "A student already has that ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else {
+                        validInput = true; // Si llegamos aquí, la entrada es válida
+                    }
+                    updateTextArea();
                 }
-                updateTextArea();
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid ID (numeric).", "Error", JOptionPane.ERROR_MESSAGE);
+                catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid ID (numeric).", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else {
+                validInput = true; // Cancelar el diálogo no debería cerrar la ventana de agregar estudiante
             }
         }
+
     }
 
     private void enrollStudentWindow() {
